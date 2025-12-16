@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tbay - Home for the Holidays</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdf2f8;
+        }
+        .font-holiday {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const handleRedirect = () => {
+                window.location.href = 'http://dl.tbay.store/';
+            };
+
+        // Simple Snowfall Component
+        const Snowfall = () => {
+            const [flakes, setFlakes] = useState([]);
+
+            useEffect(() => {
+                const createFlake = () => ({
+                    id: Math.random(),
+                    left: Math.random() * 100 + 'vw',
+                    size: Math.random() * 5 + 2 + 'px',
+                    duration: Math.random() * 5 + 5 + 's',
+                    delay: Math.random() * 5 + 's'
+                });
+
+                const initialFlakes = Array.from({ length: 20 }).map(createFlake);
+                setFlakes(initialFlakes);
+            }, []);
+
+            return (
+                <div className="snow-container">
+                    {flakes.map(flake => (
+                        <div
+                            key={flake.id}
+                            className="snowflake"
+                            style={{
+                                left: flake.left,
+                                width: flake.size,
+                                height: flake.size,
+                                animationDuration: flake.duration,
+                                animationDelay: flake.delay
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('leaderboard');
+
+            useEffect(() => {
+                lucide.createIcons();
+            }, [activeTab]);
+
+            return (
+                <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 relative">
+                    <Snowfall />
+                    
+                    {/* Header / Nav */}
+                    <nav className="bg-red-700/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+                        <div className="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+                            {/* Logo Placeholder */}
+                            <div className="flex items-center gap-2">
+                                <img 
+                                    src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/images/a12ebda5-132a-111f-7f8f-3c73f00a9cb4.png" 
+                                    alt="Logo" 
+                                    className="h-8 md:h-10 w-auto object-contain"
+                                    onError={(e) => {e.target.style.display='none';}} 
+                                />
+                                
+                            </div>
+                            <button onClick={handleRedirect} className="bg-white text-red-700 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-red-50 transition">
+                            
+                                Trade Now
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <header className="relative bg-red-700 text-white overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                        <div className="max-w-md mx-auto px-6 py-12 relative z-10 text-center">
+                            <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-4 border border-white/30">
+                                📅 Dec 18 - Dec 31, 2025
+                            </div>
+                            <h1 className="font-holiday text-5xl mb-2 text-yellow-300 drop-shadow-md">Home for the Holidays</h1>
+                            <p className="text-lg text-red-100 mb-6">Make this season your most profitable yet!</p>
+                            
+                            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                                <h2 className="text-2xl font-bold mb-2">30,000 Naira</h2>
+                                <p className="text-sm opacity-90 mb-4">Worth of Coupons Waiting For You</p>
+                                <button onClick={handleRedirect} className="w-full bg-yellow-400 text-red-800 font-bold py-3 rounded-xl shadow-lg hover:bg-yellow-300 transform transition active:scale-95" >
+                                    Start Trading
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="max-w-md mx-auto px-4 -mt-2 relative z-20 space-y-6">
+                        
+                        {/* Navigation Tabs */}
+                        <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                            <button 
+                                onClick={() => setActiveTab('leaderboard')}
+                                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === 'leaderboard' ? 'bg-yellow-100 text-yellow-800 shadow-sm' : 'text-slate-500'}`}
+                            >
+                                🏆 Leaderboard
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('bundle')}
+                                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === 'bundle' ? 'bg-red-100 text-red-700 shadow-sm' : 'text-slate-500'}`}
+                            >
+                                🎁 Coupon Bundle
+                            </button>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="min-h-[400px]">
+                            {activeTab === 'bundle' ? (
+                                <div className="space-y-6 animate-fade-in">
+                                    {/* Bundle Logic */}
+                                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                                                <i data-lucide="gift"></i>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-lg">The High-Roller Bundle</h3>
+                                                <p className="text-xs text-slate-500">Activity 2</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-200">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-sm font-medium text-slate-600">Requirement</span>
+                                            </div>
+                                            
+                                            <p className="text-xs text-slate-500 mt-2">Trade 500 Tbay Points cumulative volume to unlock during December.</p>
+                                        </div>
+
+                                        <h4 className="font-semibold text-sm mb-3 text-slate-700">What's Inside the Bundle?</h4>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-orange-50 border border-orange-100 p-3 rounded-xl text-center">
+                                                <div className="text-2xl font-bold text-orange-600">3%</div>
+                                                <div className="text-xs font-medium text-orange-800 uppercase">Rate Up</div>
+                                                <div className="text-[10px] text-orange-400 mt-1">2 Coupons</div>
+                                            </div>
+                                            <div className="bg-orange-50 border border-orange-100 p-3 rounded-xl text-center">
+                                                <div className="text-2xl font-bold text-orange-600">2%</div>
+                                                <div className="text-xs font-medium text-orange-800 uppercase">Rate Up</div>
+                                                <div className="text-[10px] text-orange-400 mt-1">2 Coupons</div>
+                                            </div>
+                                            <div className="bg-orange-50 border border-orange-100 p-3 rounded-xl text-center col-span-2 flex items-center justify-between px-6">
+                                                <div className="text-left">
+                                                    <div className="text-2xl font-bold text-orange-600">1%</div>
+                                                    <div className="text-xs font-medium text-orange-800 uppercase">Rate Up</div>
+                                                </div>
+                                                <div className="bg-white px-3 py-1 rounded-full text-xs font-bold text-orange-600 shadow-sm border border-orange-100">
+                                                    3 Coupons
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        <div className="bg-yellow-50 rounded-xl p-4 mt-4 text-center border border-yellow-100">
+                                                 <p className="text-sm text-yellow-800 font-medium mb-1">Coupon Release</p>
+                                                 <p className="text-xs text-yellow-700 opacity-80">Eligible users will receive coupon bundle on 03/01/2025</p>
+                                            </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            ) : (
+                                <div className="space-y-6 animate-fade-in">
+                                    {/* Leaderboard Logic */}
+                                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
+                                                <i data-lucide="trophy"></i>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-lg">Santa's Top Traders</h3>
+                                                <p className="text-xs text-slate-500">Activity 1</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="text-center mb-6">
+                                            <p className="text-sm text-slate-500 uppercase tracking-wider font-semibold">Prize Pool</p>
+                                            <p className="text-4xl font-bold text-yellow-500 font-holiday">300 Points</p>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <div className="flex items-center bg-yellow-50 p-3 rounded-xl border border-yellow-200">
+                                                <div className="w-8 h-8 flex items-center justify-center font-bold text-yellow-700 bg-yellow-200 rounded-full mr-3">1</div>
+                                                <div className="flex-1 flex justify-between items-center pr-2">
+                                                    <span className="font-bold text-slate-700">100 Tbay Points</span>
+                                                    <span className="text-xs font-bold text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Top Winner</span>
+                                                </div>
+                                                <i data-lucide="crown" className="text-yellow-500 w-5 h-5"></i>
+                                            </div>
+                                            <div className="flex items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                                <div className="w-8 h-8 flex items-center justify-center font-bold text-slate-500 bg-slate-200 rounded-full mr-3">2</div>
+                                                <div className="flex-1 flex justify-between items-center pr-2">
+                                                     <span className="font-bold text-slate-700">80 Tbay Points</span>
+                                                     <span className="text-xs font-bold text-slate-500 bg-slate-200 px-2 py-1 rounded-full">Runner Up</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                                <div className="w-8 h-8 flex items-center justify-center font-bold text-slate-500 bg-slate-200 rounded-full mr-3">3</div>
+                                                <div className="flex-1 flex justify-between items-center pr-2">
+                                                     <span className="font-bold text-slate-700">50 Tbay Points</span>
+                                                     <span className="text-xs font-bold text-slate-500 bg-slate-200 px-2 py-1 rounded-full">Runner Up</span>
+                                                </div>
+                                            </div>
+                                             <div className="flex items-center bg-slate-50 p-3 rounded-xl border border-slate-100 opacity-75">
+                                                <div className="w-8 h-8 flex items-center justify-center font-bold text-slate-400 bg-slate-100 rounded-full mr-3 text-xs">4-10</div>
+                                                <div className="flex-1 flex justify-between items-center pr-2">
+                                                     <span className="font-medium text-slate-600">10 Tbay Points Each</span>
+                                                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">Bonus</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="bg-yellow-50 rounded-xl p-4 mt-4 text-center border border-yellow-100">
+                                                 <p className="text-sm text-yellow-800 font-medium mb-1">Rankings Determined by Volume</p>
+                                                 <p className="text-xs text-yellow-700 opacity-80">All trade volume generated in December counts toward the campaign. Final winners will be notified via email after the event concludes on December 31..</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* How to Join */}
+                        <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-2xl p-6 text-white text-center relative overflow-hidden">
+                            <i data-lucide="snowflake" className="absolute top-2 right-2 text-white/10 w-24 h-24"></i>
+                            <h3 className="font-holiday text-3xl mb-4">Ready to Win?</h3>
+                            <ol className="text-left space-y-4 mb-6 relative z-10">
+                                <li className="flex gap-3">
+                                    <span className="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold shrink-0">1</span>
+                                    <span className="text-green-50 text-sm">Start trading on Tbay between Dec 18 - 31.</span>
+                                </li>
+                                <li className="flex gap-3">
+                                    <span className="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold shrink-0">2</span>
+                                    <span className="text-green-50 text-sm">Hit 500 points to unlock your coupon bundle instantly.</span>
+                                </li>
+                                <li className="flex gap-3">
+                                    <span className="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold shrink-0">3</span>
+                                    <span className="text-green-50 text-sm">Keep trading to climb the leaderboard for bonus points!</span>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        {/* Footer */}
+                        <footer className="text-center text-slate-400 text-xs py-8">
+                            <p className="mb-2">© 2025 Tbay. All rights reserved.</p>
+                            <p>Terms & Conditions apply. Prizes credited to wallet.</p>
+                        </footer>
+                    </main>
+
+                    {/* Mobile Fixed Bottom CTA (Optional, appears on scroll ideally, but kept static for simplicity) */}
+                    
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
