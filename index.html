@@ -152,6 +152,11 @@
             border-color: #ffeba3;
         }
 
+        .game-card-green {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
         /* Status Tag */
         .status-tag {
             position: absolute;
@@ -270,39 +275,20 @@
         <div class="status-tag status-yet" id="campaignStatus">YET TO START</div>
         
         <div class="text-center mt-3">
-            <h2 class="font-game text-xl text-blue-900 tracking-wide mb-1">PRIZE POOL</h2>
+            <h2 class="font-game text-xl text-blue-900 tracking-wide mb-1">REMAINING PRIZE POOL</h2>
             
             <div class="flex justify-center items-end" id="poolDisplay">
                 <span class="font-game title-gold">400</span>
-                <span class="font-game title-gold-small">PTS!</span>
+                <span class="font-game title-gold-small">PTS LEFT!</span>
             </div>
             
             <div class="mt-4 px-2">
                 <div class="progress-track">
                     <div class="progress-fill" id="progressFill" style="width: 100%;"></div>
                 </div>
-                <div class="flex justify-between text-[11px] font-black mt-2 text-gray-500 uppercase">
-                    <span id="claimedText">0 CLAIMED</span>
-                    <span id="leftText" class="text-red-600">400 LEFT</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Single-vendor limit warnings -->
-    <div class="game-card game-card-yellow p-4">
-        <div class="flex gap-3">
-            <div class="text-3xl">⚠️</div>
-            <div>
-                <h3 class="font-game text-lg text-amber-900 leading-tight mb-1">SINGLE-VENDOR RULE</h3>
-                <p class="text-xs font-bold text-amber-800 leading-snug">
-                    Targets must be reached from <u class="font-black">one single vendor</u>. Points from different vendors 
-                    <span class="bg-red-500 text-white px-1 rounded inline-block mt-1">CANNOT BE COMBINED</span>.
-                </p>
-                <div class="mt-2 bg-white rounded p-2 border border-amber-200">
-                    <p class="text-[10px] font-bold text-gray-600">
-                        <span class="text-amber-600">PRO TIP:</span> Meet target tiers for Nyland AND Pikachu separately? You claim <strong class="text-red-500">BOTH</strong> rewards!
-                    </p>
+                <div class="flex justify-between text-[12px] font-black mt-2 text-gray-500 uppercase">
+                    <span id="claimedText" class="bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md">0 CLAIMED</span>
+                    <span id="leftText" class="text-red-600 bg-red-100 border border-red-200 px-2.5 py-1 rounded-md">400 LEFT</span>
                 </div>
             </div>
         </div>
@@ -400,6 +386,54 @@
         </div>
     </div>
 
+    <!-- How to Earn Rewards Simple Steps -->
+    <div class="game-card game-card-green p-4">
+        <h3 class="font-game text-lg text-emerald-950 leading-none mb-3 tracking-wide flex items-center gap-1.5">
+            <span>🚀</span> HOW TO EARN REWARDS
+        </h3>
+        <div class="space-y-3 text-xs font-bold text-emerald-900">
+            <div class="flex items-start gap-2.5">
+                <div class="bg-emerald-200 text-emerald-800 w-5 h-5 rounded-full flex items-center justify-center font-black flex-shrink-0">1</div>
+                <p class="leading-relaxed"><strong class="text-emerald-950">Choose a Vendor:</strong> Open a trade with Kardbaba, Nyland, DavidCard, or Pikachu.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+                <div class="bg-emerald-200 text-emerald-800 w-5 h-5 rounded-full flex items-center justify-center font-black flex-shrink-0">2</div>
+                <p class="leading-relaxed"><strong class="text-emerald-950">Hit a Trade Tier:</strong> Reach the minimum point target for that specific vendor during the event.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+                <div class="bg-emerald-200 text-emerald-800 w-5 h-5 rounded-full flex items-center justify-center font-black flex-shrink-0">3</div>
+                <p class="leading-relaxed"><strong class="text-emerald-950">Get Rewarded:</strong> Your extra bonus points are calculated and distributed automatically the following day!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Single-vendor guidelines (Placed below reward cards) -->
+    <div class="game-card game-card-yellow p-4">
+        <div>
+            <h3 class="font-game text-lg text-amber-950 leading-none mb-2 tracking-wide flex items-center gap-1.5">
+                <span>💡</span> SINGLE-VENDOR GUIDE
+            </h3>
+            <p class="text-xs font-bold text-amber-900 leading-relaxed">
+                To unlock a reward tier, your trading points must be accumulated through <span class="underline decoration-2 decoration-amber-500 font-black">one single vendor</span>. Points from different vendors are calculated independently.
+            </p>
+            
+            <!-- Highly visible Eligible Vendors row -->
+            <div class="mt-3 pt-3 border-t border-amber-200/50 flex flex-wrap gap-1.5 items-center">
+                <span class="text-[10px] font-black text-amber-950 uppercase tracking-wider mr-1">Eligible Campaign Vendors:</span>
+                <span class="bg-orange-100 text-orange-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-orange-200">Kardbaba</span>
+                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Nyland</span>
+                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">DavidCard</span>
+                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Pikachu</span>
+            </div>
+
+            <div class="mt-3 bg-white/90 rounded-xl p-2.5 border border-amber-200 shadow-sm">
+                <p class="text-[11px] font-bold text-amber-950 leading-snug">
+                    <span class="text-emerald-600 font-black">⭐ MULTI-REWARD ADVANTAGE:</span> Meet target tiers for both <span class="text-orange-600">Kardbaba</span> and <span class="text-blue-600">Nyland</span> separately? You can claim rewards for <strong class="text-emerald-600">BOTH</strong> challenges!
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- Bottom descriptive terms -->
     <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-white/50">
         <h4 class="font-black text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200 pb-2 mb-2">
@@ -487,10 +521,10 @@
             if (!isNaN(currentPool)) {
                 currentPool = Math.max(0, Math.min(MAX_POOL, currentPool));
                 
-                // Update 3D Number HTML
+                // Update 3D Number HTML to clearly highlight "PTS LEFT!"
                 poolEl.innerHTML = `
                     <span class="font-game title-gold">${currentPool}</span>
-                    <span class="font-game title-gold-small">PTS!</span>
+                    <span class="font-game title-gold-small">PTS LEFT!</span>
                 `;
                 
                 // Update Bar Text
