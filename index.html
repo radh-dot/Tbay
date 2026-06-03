@@ -420,7 +420,7 @@
     const CAMPAIGN_END = "2026-06-15T23:59:59+01:00";   
     const MAX_POOL = 400;
     
-    // 2. Google Sheet CSV URL (Verified & Linked)
+    // 2. Google Sheet CSV URL
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv"; 
 
     // Convert GMT+1 date strings to the User's Local Time string format
@@ -466,17 +466,6 @@
         const leftEl = document.getElementById('leftText');
         const progressFill = document.getElementById('progressFill');
 
-        // SAFE PRE-FLIGHT CHECK: Avoid TypeError from invalid placeholder URLs
-        if (
-            !GOOGLE_SHEET_CSV_URL || 
-            GOOGLE_SHEET_CSV_URL.trim() === "" || 
-            GOOGLE_SHEET_CSV_URL.includes("YOUR_PUBLISHED_CSV_URL_HERE") ||
-            !GOOGLE_SHEET_CSV_URL.startsWith("http")
-        ) {
-            console.warn("Google Sheet URL is unconfigured or set to placeholder. Gracefully running in fallback mock preview mode (400 PTS).");
-            return; 
-        }
-
         try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL, { cache: "no-store" });
             if (!response.ok) throw new Error("Fetch failed");
@@ -485,12 +474,12 @@
             const rows = csvText.split('\n');
             if (rows.length < 2) return;
 
-            // Strict column matching for "RemainingPool"
-            const cellA1 = rows[0].split(',')[0].trim().replace(/\r/g, '');
-            const cellA2 = rows[1].split(',')[0].trim().replace(/\r/g, '');
+            // Strict column matching for "RemainingPool", cleaning quotes if any
+            const cellA1 = rows[0].split(',')[0].trim().replace(/\r/g, '').replace(/^"|"$/g, '');
+            const cellA2 = rows[1].split(',')[0].trim().replace(/\r/g, '').replace(/^"|"$/g, '');
             
             if (cellA1.toLowerCase() !== "remainingpool") {
-                console.warn("Header check mismatch: A1 is not 'RemainingPool'");
+                console.warn("Header check mismatch: A1 is not 'RemainingPool'. Found: " + cellA1);
             }
 
             let currentPool = parseFloat(cellA2);
