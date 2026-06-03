@@ -470,7 +470,7 @@
         if (
             !GOOGLE_SHEET_CSV_URL || 
             GOOGLE_SHEET_CSV_URL.trim() === "" || 
-            GOOGLE_SHEET_CSV_URL.includes("YOUR_PUBLISHED_CSV_URL_HERE") ||
+            GOOGLE_SHEET_CSV_URL.includes("https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv") ||
             !GOOGLE_SHEET_CSV_URL.startsWith("http")
         ) {
             console.warn("Google Sheet URL is unconfigured or set to placeholder. Gracefully running in fallback mock preview mode (400 PTS).");
