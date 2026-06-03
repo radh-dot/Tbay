@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tbay Bonus Challenge</title>
+    <!-- Importing fonts to match the UI's bubbly and clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-blue: #63b3ed;
+            --card-bg: #ffffff;
+            --text-dark: #1e3a8a;
+            --text-blue: #2563eb;
+            --red-main: #ef4444;
+            --yellow-main: #facc15;
+            --yellow-border: #fde047;
+            --orange-card: #f59e0b;
+            --orange-tier: #f97316;
+            --orange-light: #ffedd5;
+            --blue-tier: #3b82f6;
+            --blue-light: #dbeafe;
+            --font-display: 'Lilita One', cursive;
+            --font-body: 'Nunito', sans-serif;
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-blue);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            padding: 20px 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px; /* Mobile-first width like the screenshots */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- Header Section --- */
+        .header {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .date-pill {
+            background-color: var(--red-main);
+            color: white;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            border-radius: 99px;
+            display: inline-block;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .main-title {
+            font-family: var(--font-display);
+            font-size: 3.2rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-text-stroke: 2px #1e3a8a; /* Dark blue outline */
+            text-shadow: 0px 4px 0px rgba(30, 58, 138, 0.4);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #1e3a8a;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- Global Card Styles --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px 20px 20px 20px;
+            position: relative;
+            box-shadow: 0 10px 0px rgba(0,0,0,0.1);
+            border: 4px solid transparent;
+        }
+
+        /* Status Pill (Overlaps top of card) */
+        .status-pill {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3b82f6;
+            color: white;
+            font-family: var(--font-display);
+            padding: 6px 20px;
+            border-radius: 99px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow-sm);
+            white-space: nowrap;
+        }
+        .status-yet { background: #3b82f6; }
+        .status-on { background: #10b981; }
+        .status-comp { background: var(--red-main); }
+
+        /* --- Pool Card --- */
+        .pool-card {
+            border-color: var(--yellow-border);
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .pool-title {
+            font-family: var(--font-display);
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+
+        .pool-subtitle {
+            color: #9ca3af;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .pool-amount {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: var(--yellow-main);
+            -webkit-text-stroke: 2px #1e3a8a;
+            text-shadow: 3px 3px 0px #1e3a8a;
+            line-height: 1;
+            margin: 5px 0 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .pool-amount span {
+            font-size: 2rem;
+            color: #1e3a8a;
+            -webkit-text-stroke: 0;
+            text-shadow: none;
+        }
+
+        .progress-bar-bg {
+            background: #e5e7eb;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #fbbf24, #ea580c, #dc2626);
+            width: 100%; /* Will be updated via JS */
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .stat-claimed { color: #6b7280; }
+        .stat-left { color: var(--red-main); }
+
+        .btn-start {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to bottom, #fde047, #eab308);
+            color: var(--text-dark);
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 6px 0px #ca8a04;
+            transition: transform 0.1s;
+        }
+        .btn-start:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #ca8a04;
+        }
+
+        /* --- Rules Card --- */
+        .rules-card {
+            background: var(--orange-card);
+            border-color: #fcd34d;
+        }
+
+        .rules-title {
+            font-family: var(--font-display);
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .rule-box {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .rule-box h4 {
+            color: #b45309;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .rule-box p {
+            font-size: 0.9rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .badge-red {
+            background: var(--red-main);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .badge-yellow {
+            background: var(--yellow-main);
+            color: var(--text-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* --- Vendor & Tier Cards --- */
+        .vendor-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px dashed #e5e7eb;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .vendor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: var(--shadow-sm);
+            object-fit: cover;
+        }
+
+        .avatar-group {
+            display: flex;
+        }
+        .avatar-group img {
+            margin-left: -15px;
+            position: relative;
+        }
+        .avatar-group img:first-child { margin-left: 0; z-index: 3; }
+        .avatar-group img:nth-child(2) { z-index: 2; }
+        .avatar-group img:nth-child(3) { z-index: 1; }
+
+        .vendor-info {
+            margin-left: 15px;
+        }
+        .vendor-role {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-blue);
+            text-transform: uppercase;
+        }
+        .vendor-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        /* Tiers */
+        .tier {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .tier-top {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .tier-bottom {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .tier-bottom span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .tier-bottom strong {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            color: var(--red-main);
+        }
+
+        .tier-arrow {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        /* Specific Tier Colors */
+        .kardbaba-tier .tier-top { background: var(--orange-tier); }
+        .kardbaba-tier .tier-bottom { background: var(--orange-light); }
+        
+        .group-tier .tier-top { background: var(--blue-tier); }
+        .group-tier .tier-bottom { background: var(--blue-light); }
+
+        /* --- Info Cards (Bottom) --- */
+        .info-card {
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .info-card h3 {
+            font-family: var(--font-display);
+            color: var(--text-blue);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card p, .info-card li {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .info-card ul { padding-left: 20px; }
+
+        .text-red { color: var(--red-main); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Header Section -->
+    <div class="header">
+        <div class="date-pill" id="localDateDisplay">🗓️ CALCULATING... (LOCAL)</div>
+        <h1 class="main-title">BONUS CHALLENGE</h1>
+        <div class="subtitle">COMPLETE TIERS • UNLOCK REWARDS</div>
+    </div>
+
+    <!-- Pool Card -->
+    <div class="card pool-card">
+        <div class="status-pill status-yet" id="campaignStatus">YET TO START</div>
+        <h2 class="pool-title">CLAIM YOUR SHARE NOW!</h2>
+        <div class="pool-subtitle">REMAINING POOL:</div>
+        <div class="pool-amount" id="poolDisplay">400 <span>PTS!</span></div>
+        
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill" style="width: 100%;"></div>
+        </div>
+        <div class="progress-stats">
+            <div class="stat-claimed" id="claimedText">0 Claimed</div>
+            <div class="stat-left" id="leftText">400 Points Left</div>
+        </div>
+
+        <a href="#" class="btn-start">START TRADING NOW ></a>
+    </div>
+
+    <!-- Rules Card -->
+    <div class="card rules-card">
+        <h2 class="rules-title">ℹ️ MUST-READ RULE!</h2>
+        <div class="rule-box">
+            <h4>⚠️ SINGLE-VENDOR REQUIREMENT:</h4>
+            <p>Targets must be reached from <u>one single vendor</u>. Points traded with different vendors <span class="badge-red">CANNOT BE COMBINED</span> to reach a tier.</p>
+        </div>
+        <div class="rule-box">
+            <h4>🎁 MULTI-VENDOR BONUS EXAMPLE:</h4>
+            <p>If you reach the target tier for <span class="text-red">Nyland</span> and <span class="text-red">Pikachu</span> separately, you are eligible to claim <span class="badge-yellow">2 REWARDS</span> based on the reached tiers!</p>
+        </div>
+    </div>
+
+    <!-- Kardbaba Section -->
+    <div class="card">
+        <div class="vendor-header">
+            <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/images/2d81b703-46dd-0eb7-ed18-eaa2c33c2599.jpg" alt="Kardbaba" class="vendor-avatar">
+            <div class="vendor-info">
+                <div class="vendor-role" style="color: var(--orange-tier);">OFFICIAL PARTNER</div>
+                <div class="vendor-name" style="color: #1e3a8a;">Kardbaba</div>
+            </div>
+        </div>
+
+        <div class="tier kardbaba-tier">
+            <div class="tier-top">
+                <div>TIER 1</div>
+                <div>Traded ≥ 4,900 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS REWARD</span>
+                <strong>+15 POINTS</strong>
+            </div>
+        </div>
+        <div class="tier-arrow">⬇</div>
+        <div class="tier kardbaba-tier">
+            <div class="tier-top">
+                <div>TIER 2</div>
+                <div>Traded ≥ 7,900 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS ADDITIONAL</span>
+                <strong>+20 POINTS</strong>
+            </div>
+        </div>
+        <div class="tier-arrow">⬇</div>
+        <div class="tier kardbaba-tier">
+            <div class="tier-top">
+                <div>TIER 3</div>
+                <div>Traded ≥ 11,900 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS MAXIMUM</span>
+                <strong>+25 POINTS</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Co-Partners Section -->
+    <div class="card">
+        <div class="vendor-header">
+            <div class="avatar-group">
+                <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/_thumbs/4fe14310-99bf-d7b0-2b8b-118aca927f9c.jpg" alt="Nyland" class="vendor-avatar">
+                <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/_thumbs/db4b7284-1f61-6e46-b032-74748b7d9a24.png" alt="DavidCard" class="vendor-avatar">
+                <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/_thumbs/6f000843-f8bf-6d72-0aa5-c3c36066cc8d.jpg" alt="Pikachu" class="vendor-avatar">
+            </div>
+            <div class="vendor-info">
+                <div class="vendor-role">CO-PARTNERS</div>
+                <div class="vendor-name" style="color: #1e3a8a; font-size: 1rem;">Nyland | DavidCard | Pikachu</div>
+            </div>
+        </div>
+
+        <div class="tier group-tier">
+            <div class="tier-top">
+                <div>TIER 1</div>
+                <div>Traded ≥ 3,000 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS REWARD</span>
+                <strong>+10 POINTS</strong>
+            </div>
+        </div>
+        <div class="tier-arrow">⬇</div>
+        <div class="tier group-tier">
+            <div class="tier-top">
+                <div>TIER 2</div>
+                <div>Traded ≥ 5,000 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS ADDITIONAL</span>
+                <strong>+15 POINTS</strong>
+            </div>
+        </div>
+        <div class="tier-arrow">⬇</div>
+        <div class="tier group-tier">
+            <div class="tier-top">
+                <div>TIER 3</div>
+                <div>Traded ≥ 8,000 Points</div>
+            </div>
+            <div class="tier-bottom">
+                <span>UNLOCKS MAXIMUM</span>
+                <strong>+20 POINTS</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="card info-card">
+        <h3>🎁 REWARD DISTRIBUTION</h3>
+        <p>Rewards will be distributed dynamically on the <strong class="text-red">following day</strong> once tier requirements are fully reached.</p>
+    </div>
+
+    <div class="card info-card" style="background: #fdf6e3; border: 2px solid #fef08a;">
+        <h3 style="color: #b45309;">⭐ PRO TIP: STACK & EARN!</h3>
+        <ul>
+            <li>Trading points are checked independently per Vendor. Individual totals do not combine.</li>
+            <li>Meet tiers across multiple Vendors (e.g. Kardbaba AND Nyland) to claim rewards from BOTH pools!</li>
+        </ul>
+    </div>
+
+    <div class="card info-card" style="background: #f0f9ff; margin-bottom: 20px;">
+        <h3 style="color: #6b7280; font-size: 1rem; font-family: var(--font-body); font-weight: 800;">OFFICIAL TERMS & GUIDELINES</h3>
+        <ul style="font-size: 0.8rem; color: #4b5563;">
+            <li>Exclusive 400 Points overall campaign budget. Check daily tracker on Tbay Blog.</li>
+            <li>First-come, first-served mechanism. Timestamps are final.</li>
+            <li>If the overall campaign budget is exhausted, challenge closes instantly.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // --- 1. Configuration ---
+    const CAMPAIGN_START = "2026-06-09T00:00:00+01:00"; // Start: June 9, 00:00 GMT+1
+    const CAMPAIGN_END = "2026-06-15T23:59:59+01:00";   // End: June 15, 23:59 GMT+1
+    const MAX_POOL = 400;
+    
+    // Google Sheet URL (MUST REPLACE THIS WITH YOUR PUBLISHED CSV LINK)
+    const GOOGLE_SHEET_CSV_URL = "YOUR_PUBLISHED_CSV_URL_HERE"; 
+
+    // --- 2. Dynamic Local Time Conversion & Status ---
+    function formatToLocalString(dateString) {
+        const d = new Date(dateString);
+        const day = d.getDate();
+        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const month = monthNames[d.getMonth()];
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        return `🗓️ ${day} ${month}, ${hours}:${minutes}`;
+    }
+
+    function updateTimeAndStatus() {
+        // Update header banner with local times
+        const localStartStr = formatToLocalString(CAMPAIGN_START);
+        const localEndStr = formatToLocalString(CAMPAIGN_END).replace('🗓️ ', ''); // remove icon from second date
+        document.getElementById('localDateDisplay').innerText = `${localStartStr} - ${localEndStr} (LOCAL)`;
+
+        // Update Campaign Status Pill
+        const startTime = new Date(CAMPAIGN_START).getTime();
+        const endTime = new Date(CAMPAIGN_END).getTime();
+        const now = Date.now();
+        const statusEl = document.getElementById('campaignStatus');
+
+        statusEl.classList.remove('status-yet', 'status-on', 'status-comp');
+
+        if (now < startTime) {
+            statusEl.innerText = "YET TO START";
+            statusEl.classList.add('status-yet');
+        } else if (now >= startTime && now <= endTime) {
+            statusEl.innerText = "ONGOING";
+            statusEl.classList.add('status-on');
+        } else {
+            statusEl.innerText = "COMPLETED";
+            statusEl.classList.add('status-comp');
+        }
+    }
+
+    // --- 3. Google Sheet Fetch & UI Update Logic (Tailored for A1/A2) ---
+    async function updatePrizePool() {
+        const poolEl = document.getElementById('poolDisplay');
+        const claimedEl = document.getElementById('claimedText');
+        const leftEl = document.getElementById('leftText');
+        const progressFill = document.getElementById('progressFill');
+
+        if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === "YOUR_PUBLISHED_CSV_URL_HERE") {
+            return; // Exit if URL isn't set yet (UI defaults to 400)
+        }
+
+        try {
+            const response = await fetch(GOOGLE_SHEET_CSV_URL, { cache: "no-store" });
+            if (!response.ok) throw new Error("Fetch failed");
+            
+            const csvText = await response.text();
+            const rows = csvText.split('\n');
+            
+            if (rows.length < 2) throw new Error("Not enough rows in the sheet.");
+
+            // Get A1 (Header) and A2 (Value), cleaning up any hidden characters
+            const cellA1 = rows[0].split(',')[0].trim().replace(/\r/g, '');
+            const cellA2 = rows[1].split(',')[0].trim().replace(/\r/g, '');
+            
+            // Log a warning if A1 isn't formatted properly, but proceed anyway
+            if (cellA1.toLowerCase() !== "remainingpool") {
+                console.error("Warning: Cell A1 does not say 'RemainingPool'. Found:", cellA1);
+            }
+
+            let currentPool = parseFloat(cellA2);
+
+            if (!isNaN(currentPool)) {
+                // Ensure the value stays between 0 and your MAX_POOL (400)
+                currentPool = Math.max(0, Math.min(MAX_POOL, currentPool));
+                
+                // 1. Update large text
+                poolEl.innerHTML = `${currentPool} <span>PTS!</span>`;
+                
+                // 2. Update text below progress bar
+                const claimedAmount = MAX_POOL - currentPool;
+                claimedEl.innerText = `${claimedAmount} Claimed`;
+                leftEl.innerText = `${currentPool} Points Left`;
+
+                // 3. Update Progress Bar width (Percentage of remaining pool)
+                const percentRemaining = (currentPool / MAX_POOL) * 100;
+                progressFill.style.width = `${percentRemaining}%`;
+            }
+
+        } catch (error) {
+            console.error("Pool fetch error:", error);
+        }
+    }
+
+    // --- Initialization & Auto-fetch intervals ---
+    window.onload = () => {
+        updateTimeAndStatus();
+        updatePrizePool();
+
+        // Auto-update status every 60 seconds
+        setInterval(updateTimeAndStatus, 60000); 
+
+        // Auto-fetch remaining pool from Google Sheets every 5 minutes (300000 ms)
+        setInterval(updatePrizePool, 300000); 
+    };
+</script>
+
+</body>
+</html>
