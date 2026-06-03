@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tbay Bonus Challenge</title>
+    <!-- Prevents the missing favicon.ico 404 error -->
+    <link rel="icon" href="data:,">
     <!-- Importing fonts to match the UI's bubbly and clean look -->
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -535,7 +537,7 @@
     const MAX_POOL = 400;
     
     // Google Sheet URL (MUST REPLACE THIS WITH YOUR PUBLISHED CSV LINK)
-    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv"; 
+    const GOOGLE_SHEET_CSV_URL = "YOUR_PUBLISHED_CSV_URL_HERE"; 
 
     // --- 2. Dynamic Local Time Conversion & Status ---
     function formatToLocalString(dateString) {
@@ -581,7 +583,7 @@
         const leftEl = document.getElementById('leftText');
         const progressFill = document.getElementById('progressFill');
 
-        if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === "YOUR_PUBLISHED_CSV_URL_HERE") {
+        if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === "https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv") {
             return; // Exit if URL isn't set yet (UI defaults to 400)
         }
 
