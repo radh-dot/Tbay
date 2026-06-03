@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport configured for strict mobile scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tbay Bonus Challenge - Mobile App View</title>
     <link rel="icon" href="data:,">
@@ -28,7 +27,7 @@
         body {
             font-family: 'Nunito', sans-serif;
             background-color: var(--banner-blue-light);
-            /* Creating the sunburst/sky effect from the banner */
+            /* Creating the sunburst ray sky effect dynamically to match CP7KuzmI0e.png */
             background-image: 
                 radial-gradient(circle at top center, rgba(255,255,255,0.4) 0%, transparent 60%),
                 repeating-conic-gradient(from 0deg at 50% 0%, 
@@ -266,6 +265,7 @@
         </p>
     </header>
 
+    <!-- Live dynamic tracker card connected to Google Sheet A1/A2 -->
     <div class="game-card game-card-blue mt-4">
         <div class="status-tag status-yet" id="campaignStatus">YET TO START</div>
         
@@ -289,6 +289,7 @@
         </div>
     </div>
 
+    <!-- Single-vendor limit warnings -->
     <div class="game-card game-card-yellow p-4">
         <div class="flex gap-3">
             <div class="text-3xl">⚠️</div>
@@ -307,6 +308,7 @@
         </div>
     </div>
 
+    <!-- Kardbaba official partner card -->
     <div class="game-card pb-3">
         <div class="flex items-center gap-3 mb-4 border-b border-gray-100 pb-3">
             <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/images/2d81b703-46dd-0eb7-ed18-eaa2c33c2599.jpg" alt="Kardbaba" class="vendor-avatar">
@@ -350,6 +352,7 @@
         </div>
     </div>
 
+    <!-- Group partners card -->
     <div class="game-card pb-3">
         <div class="flex items-center gap-3 mb-4 border-b border-gray-100 pb-3">
             <div class="flex -space-x-3">
@@ -397,6 +400,7 @@
         </div>
     </div>
 
+    <!-- Bottom descriptive terms -->
     <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-white/50">
         <h4 class="font-black text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200 pb-2 mb-2">
             Distribution & Terms
@@ -416,8 +420,8 @@
     const CAMPAIGN_END = "2026-06-15T23:59:59+01:00";   
     const MAX_POOL = 400;
     
-    // 2. Google Sheet CSV URL (REPLACE THIS)
-    const GOOGLE_SHEET_CSV_URL = "YOUR_PUBLISHED_CSV_URL_HERE"; 
+    // 2. Google Sheet CSV URL (Verified & Linked)
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv"; 
 
     // Convert GMT+1 date strings to the User's Local Time string format
     function formatToLocalString(dateString) {
@@ -430,7 +434,7 @@
         return `${day} ${month}, ${hours}:${minutes}`;
     }
 
-    // Update the Date Ribbon and Campaign Status
+    // Update the Date Ribbon and Campaign Status based on current timestamp
     function updateTimeAndStatus() {
         const localStartStr = formatToLocalString(CAMPAIGN_START);
         const localEndStr = formatToLocalString(CAMPAIGN_END);
@@ -462,7 +466,16 @@
         const leftEl = document.getElementById('leftText');
         const progressFill = document.getElementById('progressFill');
 
-        if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === "https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv") return; 
+        // SAFE PRE-FLIGHT CHECK: Avoid TypeError from invalid placeholder URLs
+        if (
+            !GOOGLE_SHEET_CSV_URL || 
+            GOOGLE_SHEET_CSV_URL.trim() === "" || 
+            GOOGLE_SHEET_CSV_URL.includes("https://docs.google.com/spreadsheets/d/e/2PACX-1vSP-wKAbHPiWDFHGId00ePb8H9AFUooMdKBY74ixp0xyompISPrHl-r7wyOgCzmMs6nOSONvOvbYw3o/pub?output=csv") ||
+            !GOOGLE_SHEET_CSV_URL.startsWith("http")
+        ) {
+            console.warn("Google Sheet URL is unconfigured or set to placeholder. Gracefully running in fallback mock preview mode (400 PTS).");
+            return; 
+        }
 
         try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL, { cache: "no-store" });
@@ -472,11 +485,12 @@
             const rows = csvText.split('\n');
             if (rows.length < 2) return;
 
+            // Strict column matching for "RemainingPool"
             const cellA1 = rows[0].split(',')[0].trim().replace(/\r/g, '');
             const cellA2 = rows[1].split(',')[0].trim().replace(/\r/g, '');
             
             if (cellA1.toLowerCase() !== "remainingpool") {
-                console.warn("A1 != RemainingPool");
+                console.warn("Header check mismatch: A1 is not 'RemainingPool'");
             }
 
             let currentPool = parseFloat(cellA2);
@@ -495,7 +509,7 @@
                 claimedEl.innerText = `${claimedAmount} CLAIMED`;
                 leftEl.innerText = `${currentPool} LEFT`;
 
-                // Update Progress Bar
+                // Update Progress Bar width
                 const percentRemaining = (currentPool / MAX_POOL) * 100;
                 progressFill.style.width = `${percentRemaining}%`;
             }
