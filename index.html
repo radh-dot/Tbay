@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,16 +41,20 @@
             overflow-x: hidden;
         }
 
-        /* Container designed specifically for vertical app embed */
+        /* Container designed specifically for vertical app embed - preventing clipping and enforcing strict centering */
         .app-embed-container {
-            width: 100%;
-            max-width: 480px; /* Standard mobile max-width */
-            margin: 0 auto;
-            padding: 15px 12px 40px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+    width: 100%;
+    max-width: 480px; 
+    margin: 0 auto;
+    padding: 12px 10px 40px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center; /* ADD THIS: Fixes child text layout engine bugs */
+    gap: 14px;
+    box-sizing: border-box;
+}
+
 
         .font-game {
             font-family: 'Lilita One', cursive;
@@ -59,33 +62,56 @@
             text-transform: uppercase;
         }
 
-        /* "BONUS" text style */
+        /* "BONUS" text style - using dynamic viewport-aware clamp to prevent horizontal overflow */
         .title-bonus {
-            color: white;
-            font-size: 3.5rem;
-            -webkit-text-stroke: 2px var(--text-dark-blue);
-            text-shadow: 0px 4px 0px var(--text-dark-blue);
-            margin-bottom: -10px;
-            position: relative;
-            z-index: 2;
-            transform: rotate(-2deg);
-        }
+    color: white;
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+    -webkit-text-stroke: 2px var(--text-dark-blue);
+    text-shadow: 0px 4px 0px var(--text-dark-blue);
+    
+    /* 1. Combined your negative bottom margin with auto-centering margins */
+    margin: 0 auto -10px auto; 
+    
+    position: relative;
+    z-index: 2;
+    transform: rotate(-2deg);
+    transform-origin: center;
+    
+    /* 2. Changed from inline-block to table to allow centering without breaking text styles */
+    display: table; 
+    
+    /* 3. Safety for mobile screens */
+    max-width: 95%; 
+    box-sizing: border-box;
+}
 
-        /* "CHALLENGE" text style */
+        /* "CHALLENGE" text style - scaled responsively */
         .title-challenge {
-            color: var(--banner-red);
-            font-size: 3.2rem;
-            -webkit-text-stroke: 3px white;
-            text-shadow: 0px 5px 0px var(--banner-red-dark), 0px 8px 10px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 3;
-            transform: rotate(1deg);
-        }
+    color: var(--banner-red);
+    font-size: clamp(2.2rem, 11vw, 3.2rem);
+    -webkit-text-stroke: 2.5px white;
+    text-shadow: 0px 5px 0px var(--banner-red-dark), 0px 8px 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 3;
+    transform: rotate(1deg);
+    transform-origin: center;
+    
+    /* 1. Changed from inline-block to table to allow centering while protecting font rendering */
+    display: table; 
+    
+    /* 2. Added auto margins to force horizontal centering */
+    margin: 0 auto; 
+    
+    /* 3. Safety fallback to keep it mobile-friendly */
+    max-width: 95%;
+    box-sizing: border-box;
+}
 
-        /* The Gold 400 POINTS style */
+
+        /* The Gold POINTS text style - responsive scaling to prevent breaking layout lines */
         .title-gold {
             color: var(--banner-gold);
-            font-size: 4.5rem;
+            font-size: clamp(3rem, 15vw, 4.4rem);
             -webkit-text-stroke: 2px var(--text-dark-blue);
             text-shadow: 
                 0px 2px 0px var(--banner-gold-dark),
@@ -95,7 +121,7 @@
         }
 
         .title-gold-small {
-            font-size: 1.8rem;
+            font-size: clamp(1.2rem, 6vw, 1.8rem);
             color: white;
             -webkit-text-stroke: 1.5px var(--text-dark-blue);
             text-shadow: 0px 3px 0px var(--text-dark-blue);
@@ -103,44 +129,64 @@
             margin-left: 4px;
         }
 
-        /* Red Ribbon Date Pill */
+        /* Red Ribbon Date Pill - designed to wrap safely on small displays */
         .red-ribbon {
-            background: linear-gradient(to bottom, #ff1a1a, #cc0000);
-            color: white;
-            font-weight: 900;
-            font-size: 0.85rem;
-            padding: 8px 24px;
-            border-radius: 4px;
-            position: relative;
-            display: inline-block;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            border: 1px solid #ff4d4d;
-            margin-top: 10px;
-            letter-spacing: 0.5px;
-        }
+    background: linear-gradient(to bottom, #ff1a1a, #cc0000);
+    color: white;
+    font-weight: 900;
+    font-size: clamp(0.7rem, 3.2vw, 0.85rem);
+    padding: 8px 18px;
+    border-radius: 4px;
+    position: relative;
+    
+    /* 1. Changed to block so auto margins work */
+    display: block; 
+    
+    /* 2. Added auto left/right margins to force perfect horizontal centering */
+    margin: 10px auto 0 auto; 
+    
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    border: 1px solid #ff4d4d;
+    letter-spacing: 0.5px;
+    
+    /* 3. This already prevents the ribbon from breaking on small screens */
+    max-width: 90%; 
+    box-sizing: border-box;
+    text-align: center;
+}
+
+        
         /* Ribbon tails */
         .red-ribbon::before, .red-ribbon::after {
             content: '';
             position: absolute;
             top: 5px;
             bottom: 5px;
-            width: 15px;
+            width: 12px;
             background: #990000;
             z-index: -1;
         }
-        .red-ribbon::before { left: -8px; transform: skewY(15deg); border-radius: 4px 0 0 4px; }
-        .red-ribbon::after { right: -8px; transform: skewY(-15deg); border-radius: 0 4px 4px 0; }
+        .red-ribbon::before { left: -6px; transform: skewY(15deg); border-radius: 4px 0 0 4px; }
+        .red-ribbon::after { right: -6px; transform: skewY(-15deg); border-radius: 0 4px 4px 0; }
 
         /* Mobile Game-Style Cards */
         .game-card {
             background: white;
-            border-radius: 20px;
-            padding: 20px 16px;
+            border-radius: 18px;
+            padding: 16px 12px;
             border: 3px solid white;
             box-shadow: 
                 inset 0 -6px 0px rgba(0,0,0,0.05), /* Inner bottom shadow for 3D block feel */
                 0 8px 16px rgba(0,31,77,0.15); /* Outer drop shadow */
             position: relative;
+            box-sizing: border-box;
+            width: 100%; /* Ensures they expand fully within the centered layout */
+        }
+
+        @media(min-width: 360px) {
+            .game-card {
+                padding: 20px 16px;
+            }
         }
 
         .game-card-blue {
@@ -168,7 +214,7 @@
             padding: 4px 16px;
             border-radius: 99px;
             font-family: 'Lilita One', cursive;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
             border: 2px solid white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -182,7 +228,7 @@
         .vendor-badge {
             background: var(--text-dark-blue);
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 900;
             padding: 2px 8px;
             border-radius: 4px;
@@ -192,8 +238,8 @@
         }
 
         .vendor-avatar {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -214,7 +260,7 @@
         .tier-header {
             background: #f8f9fa;
             padding: 6px 12px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 900;
             color: #666;
             border-bottom: 2px solid #f0f0f0;
@@ -222,17 +268,17 @@
             justify-content: space-between;
         }
         .tier-body {
-            padding: 12px;
+            padding: 10px 12px;
             text-align: center;
         }
         .tier-reward {
             font-family: 'Lilita One', cursive;
             color: var(--banner-red);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             line-height: 1.2;
         }
         .tier-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 900;
             color: #888;
             text-transform: uppercase;
@@ -260,44 +306,62 @@
 
 <div class="app-embed-container">
     
-    <header class="text-center mt-2 mb-2">
-        <div class="font-game title-bonus">BONUS</div>
-        <div class="font-game title-challenge">CHALLENGE</div>
-        <div class="red-ribbon" id="localDateDisplay">
-            🗓️ CALCULATING TIME...
+    <!-- Header Section - Perfectly Centered Grid with zero clipping and stacked 2-line layout -->
+    <header class="w-full flex flex-col items-center justify-center text-center mt-2 mb-2 px-1 box-border">
+        <!-- Guaranteed two-line structure matching banner exactly -->
+        <div class="w-full flex justify-center mb-1">
+            <span class="font-game title-bonus">BONUS</span>
         </div>
-        <p class="mt-3 text-[11px] font-black tracking-widest text-white uppercase drop-shadow-md">
-            Complete Tiers. Unlock Rewards.
-        </p>
+        <div class="w-full flex justify-center">
+            <span class="font-game title-challenge">CHALLENGE</span>
+        </div>
+        
+        <!-- Centered Date Ribbon -->
+        <div class="w-full flex justify-center mt-2">
+            <div class="red-ribbon" id="localDateDisplay">
+                🗓️ CALCULATING TIME...
+            </div>
+        </div>
+        
+        <!-- Centered Subtext -->
+       <!-- Added mx-auto to ensure the wrapper itself is dead-center -->
+<div class="w-full flex justify-center items-center mx-auto mt-3">
+    <!-- Changed w-full to w-auto so text alignment isn't distorted by hidden box widths -->
+    <p class="w-auto text-[10px] sm:text-[11px] font-black tracking-widest text-white uppercase drop-shadow-md text-center">
+        Complete Tiers. Unlock Rewards.
+    </p>
+</div>
+
+
     </header>
 
     <!-- Live dynamic tracker card connected to Google Sheet A1/A2 -->
-    <div class="game-card game-card-blue mt-4">
+    <div class="game-card game-card-blue">
         <div class="status-tag status-yet" id="campaignStatus">YET TO START</div>
         
         <div class="text-center mt-3">
-            <h2 class="font-game text-xl text-blue-900 tracking-wide mb-1">REMAINING PRIZE POOL</h2>
+            <h2 class="font-game text-lg sm:text-xl text-blue-900 tracking-wide mb-1">REMAINING PRIZE POOL</h2>
             
             <div class="flex justify-center items-end" id="poolDisplay">
                 <span class="font-game title-gold">400</span>
                 <span class="font-game title-gold-small">PTS LEFT!</span>
             </div>
             
-            <div class="mt-4 px-2">
+            <div class="mt-3 px-1">
                 <div class="progress-track">
                     <div class="progress-fill" id="progressFill" style="width: 100%;"></div>
                 </div>
-                <div class="flex justify-between text-[12px] font-black mt-2 text-gray-500 uppercase">
-                    <span id="claimedText" class="bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md">0 CLAIMED</span>
-                    <span id="leftText" class="text-red-600 bg-red-100 border border-red-200 px-2.5 py-1 rounded-md">400 LEFT</span>
+                <div class="flex justify-between text-[10px] sm:text-[11px] font-black mt-2 text-gray-500 uppercase gap-2">
+                    <span id="claimedText" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md flex-1 text-center truncate">0 CLAIMED</span>
+                    <span id="leftText" class="text-red-600 bg-red-100 border border-red-200 px-2 py-1 rounded-md flex-1 text-center truncate">400 LEFT</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- How to Earn Rewards Simple Steps (Moved directly below Prize Pool) -->
+    <!-- How to Earn Rewards Simple Steps (Placed directly below Prize Pool) -->
     <div class="game-card game-card-green p-4">
-        <h3 class="font-game text-lg text-emerald-950 leading-none mb-3 tracking-wide flex items-center gap-1.5">
+        <h3 class="font-game text-base sm:text-lg text-emerald-950 leading-none mb-3 tracking-wide flex items-center gap-1.5">
             <span>🚀</span> HOW TO EARN REWARDS
         </h3>
         <div class="space-y-3 text-xs font-bold text-emerald-900">
@@ -322,7 +386,7 @@
             <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/images/2d81b703-46dd-0eb7-ed18-eaa2c33c2599.jpg" alt="Kardbaba" class="vendor-avatar">
             <div>
                 <div class="vendor-badge" style="background: #f97316;">Official Partner</div>
-                <h3 class="font-black text-xl text-gray-800 leading-none">Kardbaba</h3>
+                <h3 class="font-black text-lg sm:text-xl text-gray-800 leading-none">Kardbaba</h3>
             </div>
         </div>
 
@@ -368,9 +432,9 @@
                 <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/_thumbs/db4b7284-1f61-6e46-b032-74748b7d9a24.png" alt="DavidCard" class="vendor-avatar z-20">
                 <img src="https://mcusercontent.com/4ceda90aa48260f0c3c397068/_thumbs/6f000843-f8bf-6d72-0aa5-c3c36066cc8d.jpg" alt="Pikachu" class="vendor-avatar z-10">
             </div>
-            <div>
+            <div class="pl-2">
                 <div class="vendor-badge" style="background: #3b82f6;">Co-Partners</div>
-                <h3 class="font-black text-sm text-gray-800 leading-tight mt-0.5">Nyland, DavidCard, Pikachu</h3>
+                <h3 class="font-black text-xs sm:text-sm text-gray-800 leading-tight mt-0.5">Nyland, David, Pikachu</h3>
             </div>
         </div>
 
@@ -411,7 +475,7 @@
     <!-- Single-vendor guidelines (Placed below reward cards) -->
     <div class="game-card game-card-yellow p-4">
         <div>
-            <h3 class="font-game text-lg text-amber-950 leading-none mb-2 tracking-wide flex items-center gap-1.5">
+            <h3 class="font-game text-base sm:text-lg text-amber-950 leading-none mb-2 tracking-wide flex items-center gap-1.5">
                 <span>💡</span> SINGLE-VENDOR GUIDE
             </h3>
             <p class="text-xs font-bold text-amber-900 leading-relaxed">
@@ -420,15 +484,15 @@
             
             <!-- Highly visible Eligible Vendors row -->
             <div class="mt-3 pt-3 border-t border-amber-200/50 flex flex-wrap gap-1.5 items-center">
-                <span class="text-[10px] font-black text-amber-950 uppercase tracking-wider mr-1">Eligible Campaign Vendors:</span>
-                <span class="bg-orange-100 text-orange-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-orange-200">Kardbaba</span>
-                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Nyland</span>
-                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">DavidCard</span>
-                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Pikachu</span>
+                <span class="text-[9px] sm:text-[10px] font-black text-amber-950 uppercase tracking-wider mr-1">Eligible Campaign Vendors:</span>
+                <span class="bg-orange-100 text-orange-800 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-full border border-orange-200">Kardbaba</span>
+                <span class="bg-blue-100 text-blue-800 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Nyland</span>
+                <span class="bg-blue-100 text-blue-800 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">DavidCard</span>
+                <span class="bg-blue-100 text-blue-800 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">Pikachu</span>
             </div>
 
             <div class="mt-3 bg-white/90 rounded-xl p-2.5 border border-amber-200 shadow-sm">
-                <p class="text-[11px] font-bold text-amber-950 leading-snug">
+                <p class="text-[10px] sm:text-[11px] font-bold text-amber-950 leading-snug">
                     <span class="text-emerald-600 font-black">⭐ MULTI-REWARD ADVANTAGE:</span> Meet target tiers for both <span class="text-orange-600">Kardbaba</span> and <span class="text-blue-600">Nyland</span> separately? You can claim rewards for <strong class="text-emerald-600">BOTH</strong> challenges!
                 </p>
             </div>
@@ -436,11 +500,11 @@
     </div>
 
     <!-- Bottom descriptive terms -->
-    <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-white/50">
+    <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-white/50 w-full">
         <h4 class="font-black text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200 pb-2 mb-2">
             Distribution & Terms
         </h4>
-        <ul class="text-[11px] font-bold text-gray-600 space-y-2 pl-3 list-disc">
+        <ul class="text-[10px] sm:text-[11px] font-bold text-gray-600 space-y-2 pl-3 list-disc">
             <li>Rewards distributed dynamically the <strong class="text-red-500">following day</strong> once tiers are reached.</li>
             <li>First-come, first-served based on successful trades and timestamps.</li>
             <li>If the 400 Points overall budget is exhausted, the challenge closes instantly.</li>
